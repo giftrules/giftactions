@@ -1,0 +1,4 @@
+rasa-sdk==3.6.10
+requests
+word2number
+pyyaml
