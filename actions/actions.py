@@ -231,9 +231,10 @@ class ActionCheckStock(Action):
                         )
                     final_message = "\n\n-----------------------------\n\n".join(messages)
                     dispatcher.utter_message(text=f"Here are the matching products:\n\n---------------------------------------------\n{final_message}")
-                    return [SlotSet("product_name", None)]
+                   
             else:
                 dispatcher.utter_message(text=f"Sorry, I couldn't check the stock of {product_name} at the moment.\n\nPlease note that we only sell electronics!")
+            return [ SlotSet("product_name", None)]
         except Exception as e:
             dispatcher.utter_message(text="Something went wrong while checking the stock.")
             print("Error in action_check_stock:", e)
@@ -291,9 +292,10 @@ class ActionAddToCart(Action):
             dispatcher.utter_message(
                 text=f"Added {quantity} × {product_name} to your cart."
             )
+
         else:
             dispatcher.utter_message(text=f"Sorry, I couldn't add '{product_name}' to your cart.")
-        return []
+        return [SlotSet("quantity", None), SlotSet("product_name", None)]
 
 # ------------------------------------------------------------------
 # 4) Find Product Price
@@ -341,6 +343,7 @@ class ActionFindProductPrice(Action):
                     dispatcher.utter_message(text=f"Here are the matching products:\n\n---------prices-----------------\n\n{final_message}")
             else:
                 dispatcher.utter_message(text=f"Sorry, I couldn't fetch product prices for '{product_name}' right now.\n We only sell electronics")
+            return [SlotSet("product_name", None)]
         except Exception as e:
             dispatcher.utter_message(text="An error occurred while fetching the product price.")
             print("Error in action_find_product_price:", e)
@@ -386,6 +389,7 @@ class ActionFindCartTotal(Action):
                 )
             else:
                 dispatcher.utter_message(text="Sorry, I couldn't retrieve your cart.\nYour cart is empty.")
+            return [ SlotSet("product_name", None)]
         except Exception as e:
             dispatcher.utter_message(text="An error occurred while checking your cart.")
             print("Error:", e)
@@ -483,7 +487,7 @@ class ActionUpdateOrder(Action):
             dispatcher.utter_message(text="Your order has been updated.")
         else:
             dispatcher.utter_message(text="Could not update the order.")
-        return []
+        return [SlotSet("order_id", None)]
 
 
 # ------------------------------------------------------------------
@@ -517,7 +521,7 @@ class ActionDeleteOrder(Action):
             dispatcher.utter_message(text="Order deleted successfully.")
         else:
             dispatcher.utter_message(text="Unable to delete order.")
-        return []
+        return [SlotSet("order_id", None)]
 
 
 # ------------------------------------------------------------------
@@ -560,7 +564,7 @@ class ActionCheckOrderStatus(Action):
                 )
         else:
             dispatcher.utter_message(text="I couldn't find that order.")
-        return []
+        return [SlotSet("order_id", None)]
 
 
 # ------------------------------------------------------------------
@@ -660,7 +664,6 @@ class ActionDefaultFallback(Action):
         # No close match at all
         dispatcher.utter_message(text="I'm sorry, I didn't quite understand. Could you rephrase that?")
         return []
-        
 class ActionRemoveFromCart(Action):
     def name(self) -> str:
         return "action_remove_from_cart"
@@ -721,12 +724,12 @@ class ActionRemoveFromCart(Action):
                 dispatcher.utter_message(text="The item or cart was not found.")
             else:
                 dispatcher.utter_message(text="Something went wrong while removing the item.")
+            return [SlotSet("quantity", None), SlotSet("product_name", None)]
         except Exception as e:
             dispatcher.utter_message(text="An error occurred while connecting to the server.")
             logger.error(f"Exception in action_remove_from_cart: {e}")
 
         return []
-        
 class ActionClearCart(Action):
     def name(self) -> str:
         return "action_clear_cart"
@@ -754,7 +757,9 @@ class ActionClearCart(Action):
                 dispatcher.utter_message(text="You don't seem to have a cart yet.")
             else:
                 dispatcher.utter_message(text="Sorry, something went wrong while clearing your cart.")
+            return [ SlotSet("product_name", None)]
         except Exception as e:
             dispatcher.utter_message(text="An error occurred while connecting to the server.")
 
         return []
+
