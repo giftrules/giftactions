@@ -745,7 +745,7 @@ class ActionClearCart(Action):
 
 
         try:
-            url = f"{API_BASE_URL}/products/cart_items/clear/{customer_id}"
+            url = f"{API_BASE_URL}/cart_items/clear/{customer_id}"
             response = requests.delete(url)
 
             if response.status_code == 200:
